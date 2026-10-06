@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CampMate: Вожатый.AI — Цифровой напарник наставника</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --primary-glow: rgba(59, 130, 246, 0.35);
+      --accent: #f97316;
+      --accent-hover: #ea580c;
+      --accent-glow: rgba(249, 115, 22, 0.3);
+      --bg: #090d16;
+      --surface: #111827;
+      --surface-light: #1f2937;
+      --border: #29354d;
+      --text: #f9fafb;
+      --text-muted: #94a3b8;
+      --radius: 16px;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      transition: background-color 0.25s var(--ease), border-color 0.25s var(--ease), color 0.2s var(--ease), box-shadow 0.25s var(--ease);
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 70px;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* Шапка */
+    header {
+      background: rgba(17, 24, 39, 0.75);
+      backdrop-filter: blur(20px) saturate(180%);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid var(--border);
+      padding: 14px 0;
+    }
+
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 4px 16px var(--primary-glow);
+    }
+
+    .brand-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: -0.3px;
+    }
+
+    .brand-title span { color: var(--accent); }
+
+    .btn-settings {
+      background: var(--surface-light);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 12px;
+      font-size: 0.86rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+    }
+    .btn-settings:hover {
+      border-color: var(--primary);
+      transform: translateY(-1px);
+    }
+    .btn-settings:active { transform: scale(0.97); }
+
+    /* Табы */
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      margin: 20px 0;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+
+    .nav-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .nav-btn:hover { color: var(--text); }
+    .nav-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+      box-shadow: 0 4px 18px var(--primary-glow);
+    }
+
+    /* SOS Баннер */
+    .sos-card {
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.12), rgba(17, 24, 39, 0.95));
+      border: 1px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 4px 22px var(--accent-glow);
+    }
+
+    @media (min-width: 640px) {
+      .sos-card {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+
+    .sos-text h3 {
+      font-size: 1.1rem;
+      color: #fed7aa;
+      margin-bottom: 2px;
+    }
+
+    .sos-text p {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+    }
+
+    .btn-sos {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px var(--accent-glow);
+    }
+    .btn-sos:hover { background: var(--accent-hover); transform: translateY(-1px); }
+    .btn-sos:active { transform: scale(0.97); }
+
+    /* Карточки */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fadeIn 0.3s var(--ease); }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      margin-bottom: 22px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-heading {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ИНТЕРАКТИВНАЯ СЕТКА ТЕМ (Вместо select) */
+    .theme-chips-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .theme-chip {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      user-select: none;
+    }
+    .theme-chip:hover {
+      border-color: var(--primary);
+      transform: translateY(-1px);
+    }
+    .theme-chip.active {
+      border-color: var(--primary);
+      background: rgba(59, 130, 246, 0.12);
+      box-shadow: 0 0 0 2px var(--primary-glow);
+      color: #fff;
+    }
+
+    /* Поля ввода */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    @media (min-width: 600px) {
+      .form-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .form-group select, .form-group input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 0.93rem;
+      outline: none;
+    }
+
+    .form-group select:focus, .form-group input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    .btn-generate {
+      width: 100%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 15px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 4px 18px var(--primary-glow);
+    }
+
+    .btn-generate:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+    .btn-generate:active { transform: scale(0.98); }
+    .btn-generate:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* Вывод результата */
+    .output-area {
+      margin-top: 22px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      display: none;
+    }
+
+    .output-area.visible {
+      display: block;
+      animation: slideUp 0.35s var(--ease);
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .output-header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 14px;
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .output-title {
+      font-size: 1.2rem;
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    .badge-ai {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #6ee7b7;
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+
+    /* MARKDOWN СТИЛИЗАЦИЯ (Без поломанных таблиц!) */
+    .output-content {
+      font-size: 0.96rem;
+      color: #e2e8f0;
+      line-height: 1.75;
+      word-break: break-word;
+    }
+
+    .output-content h2, .output-content h3 {
+      color: var(--primary);
+      margin-top: 20px;
+      margin-bottom: 10px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+    }
+
+    .output-content p { margin-bottom: 14px; }
+    .output-content ul, .output-content ol { padding-left: 24px; margin-bottom: 16px; }
+    .output-content li { margin-bottom: 8px; }
+    .output-content strong { color: #ffffff; font-weight: 700; }
+    
+    .output-content blockquote {
+      border-left: 4px solid var(--accent);
+      padding: 10px 16px;
+      color: #e2e8f0;
+      margin: 16px 0;
+      background: rgba(249, 115, 22, 0.08);
+      border-radius: 0 10px 10px 0;
+    }
+
+    /* Модальные окна */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(14px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 16px;
+    }
+    .modal-overlay.active { display: flex; animation: fadeIn 0.2s var(--ease); }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      max-width: 520px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.7);
+    }
+
+    /* ПАЛИТРА И НАСТРОЙКА ЦВЕТОВ */
+    .color-pickers-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 16px 0 20px;
+    }
+
+    .picker-item {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .picker-item span {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .picker-item input[type="color"] {
+      -webkit-appearance: none;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      cursor: pointer;
+      background: transparent;
+    }
+    .picker-item input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+    .picker-item input[type="color"]::-webkit-color-swatch { border: 1px solid var(--border); border-radius: 8px; }
+
+    /* История */
+    .history-item {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 12px;
+      cursor: pointer;
+    }
+    .history-item:hover { border-color: var(--primary); transform: translateY(-1px); }
+    .history-header { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; }
+    .history-title { font-weight: 700; color: var(--primary); font-size: 1rem; }
+
+    /* Авторы */
+    .author-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+    .author-card h4 { font-size: 1.1rem; color: var(--primary); margin-bottom: 4px; }
+    .author-school { font-size: 0.82rem; color: var(--accent); font-weight: 600; margin-bottom: 8px; }
+    .author-role { font-size: 0.88rem; color: #e5e7eb; }
+  </style>
+</head>
+<body>
+
+  <!-- Шапка -->
+  <header>
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-icon">🏕️</div>
+        <div>
+          <div class="brand-title">CampMate <span>AI</span></div>
+        </div>
+      </div>
+      <button class="btn-settings" onclick="openSettingsModal()">
+        <span>🎨</span> Палитра и стиль
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- Табы -->
+    <div class="nav-tabs">
+      <button class="nav-btn active" onclick="setTab('quests')">🗺️ Конструктор квестов</button>
+      <button class="nav-btn" onclick="setTab('events')">🎭 Лагерные события</button>
+      <button class="nav-btn" onclick="setTab('history')">📚 Сохранённые</button>
+      <button class="nav-btn" onclick="setTab('authors')">👥 Создатели</button>
+    </div>
+
+    <!-- Быстрая минутка -->
+    <div class="sos-card">
+      <div class="sos-text">
+        <h3>⚡ Срочная минутка (пауза в отряде)</h3>
+        <p>ИИ мгновенно выдаст азартную игру без реквизита под живой интерес ребят.</p>
+      </div>
+      <button class="btn-sos" id="btn-quick-sos" onclick="generateQuickGame()">
+        <span>🎲</span> Игра-минутка
+      </button>
+    </div>
+
+    <!-- ВКЛАДКА 1: КВЕСТЫ -->
+    <div id="tab-quests" class="tab-panel active">
+      <div class="card">
+        <div class="card-heading">🗺️ Конструктор отрядного квеста</div>
+        
+        <!-- Красивые интерактивные чипы выбора концепта -->
+        <label style="display:block; font-size:0.82rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:8px;">
+          Выберите готовый концепт или задайте свой
+        </label>
+        <div class="theme-chips-grid">
+          <div class="theme-chip active" onclick="selectChipTheme(this, '🕵️️‍♂️ Операция «Перехват»: кибер-детектив и перехват данных')">
+            <span>🕵️‍♂️</span> Операция «Перехват» (Кибер)
+          </div>
+          <div class="theme-chip" onclick="selectChipTheme(this, '⏱️ Лагерный Heist: тактическая командная спецоперация')">
+            <span>⏱️</span> Лагерный Heist (Спецоперация)
+          </div>
+          <div class="theme-chip" onclick="selectChipTheme(this, '🛰️ Потерянный сигнал: автономное выживание экспедиции')">
+            <span>🛰️</span> Потерянный сигнал (Выживание)
+          </div>
+          <div class="theme-chip" onclick="selectChipTheme(this, '🧩 Цифровой след: расшифровка тайных архивов')">
+            <span>🧩</span> Цифровой след (Шифры)
+          </div>
+          <div class="theme-chip" onclick="selectChipTheme(this, '⚡ Битва альянсов: интеллектуальный захват территории')">
+            <span>⚡</span> Битва альянсов (Стратегия)
+          </div>
+          <div class="theme-chip" onclick="selectCustomTheme(this)">
+            <span>✏️</span> Своя тема вручную...
+          </div>
+        </div>
+
+        <!-- Поле с темой (редактируемое) -->
+        <div class="form-group" style="margin-bottom:16px;">
+          <label>Текущая тема квеста</label>
+          <input type="text" id="q-theme" value="🕵️‍♂️ Операция «Перехват»: кибер-детектив и перехват данных" placeholder="Впишите любую свою задумку..." />
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Возраст отряда</label>
+            <select id="q-age">
+              <option value="7-9 лет (младший отряд)">Младший отряд (7–9 лет)</option>
+              <option value="10-13 лет (средний отряд)" selected>Средний отряд (10–13 лет)</option>
+              <option value="14-17 лет (старшие подростки)">Старший отряд (14–17 лет)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Формат и масштаб</label>
+            <select id="q-stations">
+              <option value="3 станции (быстрый динамичный квест на 25 минут)">3 станции (экспресс, ~25 мин)</option>
+              <option value="5 станций (полноценная отрядная игра на 45 минут)" selected>5 станций (стандарт, ~45 мин)</option>
+              <option value="7 станций (большой масштабный квест на 70 минут)">7 станций (большой, ~70 мин)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Локация (без порчи комнат!)</label>
+            <select id="q-loc">
+              <option value="Холл или этаж корпуса (в дождь, тихо, без беготни)">Холл корпуса (в дождь, без беготни)</option>
+              <option value="Территория лагеря (беседки, аллеи, поляны)">Территория лагеря (беседки и аллеи)</option>
+              <option value="Отрядное место / комната сбора">Отрядное место / комната сбора</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Инвентарь</label>
+            <select id="q-gear">
+              <option value="Без инвентаря (задания на словах, логика, жесты)">Без инвентаря (словесно, память, логика)</option>
+              <option value="Блокноты, карточки и ручки у ведущих">Блокноты и карточки у ведущих</option>
+              <option value="Смартфоны вожатых или таймеры">Смартфоны / таймеры</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="grid-column: 1 / -1;">
+            <label>Характер испытаний</label>
+            <select id="q-diff">
+              <option value="Азартные шифры, цепочки вопросов и загадки" selected>Логический азарт (шифры, загадки, сообразительность)</option>
+              <option value="Командная синхронность, доверие и проверка на сплоченность">Командная слаженность (синхронность, реакция, поддержка)</option>
+              <option value="Творческий баттл, мини-импровизации и юмор">Творческий баттл (мини-сценки, пародии, пантомимы)</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn-generate" id="btn-gen-quest" onclick="generateQuest()">
+          <span>⚡</span> Сгенерировать квест
+        </button>
+
+        <div id="quest-output" class="output-area">
+          <div class="output-header">
+            <span class="output-title">Сценарий квеста готов</span>
+            <span class="badge-ai" id="quest-model-badge">AI Generated</span>
+          </div>
+          <div class="output-content" id="quest-text"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ВКЛАДКА 2: ИВЕНТЫ -->
+    <div id="tab-events" class="tab-panel">
+      <div class="card">
+        <div class="card-heading">🎭 Конструктор мероприятий и огоньков</div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Формат события</label>
+            <select id="e-type">
+              <option value="Отрядный вечерний огонёк / Свечка (разговор по душам)">Отрядный огонёк / Свечка</option>
+              <option value="Интеллектуальный баттл / Квиз в отряде">Интеллектуальный баттл / Квиз</option>
+              <option value="Вечернее отрядное КТД или подготовка сценки">КТД / Подготовка сценки</option>
+              <option value="Игра на знакомство и раскрепощение">Знакомство и раскрепощение</option>
+              <option value="Спокойный час перед сном">Спокойный час перед сном</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Длительность</label>
+            <select id="e-time">
+              <option value="15-20 минут">15–20 минут (быстрый блок)</option>
+              <option value="40-45 минут" selected>40–45 минут (отрядный час)</option>
+              <option value="1 час">1 час (большой вечер)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Цель и атмосфера</label>
+            <select id="e-mood">
+              <option value="Сплочение и искреннее доверие в отряде">Сплочение и доверие</option>
+              <option value="Драйв, смех и заряд позитива">Драйв, смех и заряд позитива</option>
+              <option value="Тишина, спокойная рефлексия, подготовка ко сну">Тишина и спокойная рефлексия</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Оснащение</label>
+            <select id="e-tech">
+              <option value="Только вожатый и круг отряда (без техники)">Без техники (только ведущий)</option>
+              <option value="Колонка с тихой/фоновой музыкой">Портативная колонка</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn-generate" id="btn-gen-event" onclick="generateEvent()">
+          <span>✨</span> Сгенерировать мероприятие
+        </button>
+
+        <div id="event-output" class="output-area">
+          <div class="output-header">
+            <span class="output-title">Сценарий готов</span>
+            <span class="badge-ai" id="event-model-badge">AI Generated</span>
+          </div>
+          <div class="output-content" id="event-text"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ВКЛАДКА 3: ИСТОРИЯ -->
+    <div id="tab-history" class="tab-panel">
+      <div class="card">
+        <div class="card-heading" style="justify-content: space-between;">
+          <span>📚 Сохранённые сценарии</span>
+          <button class="btn-settings" style="font-size:0.75rem;" onclick="clearHistory()">Очистить историю</button>
+        </div>
+        <div id="history-list"></div>
+      </div>
+    </div>
+
+    <!-- ВКЛАДКА 4: АВТОРЫ -->
+    <div id="tab-authors" class="tab-panel">
+      <div class="card">
+        <div class="card-heading">👥 Создатели проекта</div>
+        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:18px;">
+          Проект создан для помощи вожатым, классным руководителям и школьным активистам в организации интересных отрядных дел.
+        </p>
+
+        <div class="author-card">
+          <h4>Андрей Соколенко</h4>
+          <div class="author-school">Ученик 8 класса, МАОУ лицей № 28 г. Таганрога</div>
+          <div class="author-role">
+            <strong>Роль в проекте:</strong> Разработка сайта, программная логика, защита ключей и интеграция нейросетевых алгоритмов.
+          </div>
+        </div>
+
+        <div class="author-card">
+          <h4>Игорь Алленов</h4>
+          <div class="author-school">Ученик 8 класса, МАОУ лицей № 28 г. Таганрога</div>
+          <div class="author-role">
+            <strong>Роль в проекте:</strong> Идея и внешний вид проекта, структура квестов, правила лагерной безопасности и сценарии.
+          </div>
+        </div>
+
+        <div style="background:rgba(59, 130, 246, 0.1); border:1px solid rgba(59, 130, 246, 0.3); border-radius:12px; padding:14px; margin-top:15px; font-size:0.85rem; color:#bfdbfe;">
+          💡 <strong>Идея сервиса:</strong> Сделать так, чтобы вожатый прямо с телефона мог за минуту найти интересную игру или квест под любую ситуацию, не нарушая правил лагеря и дисциплины.
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Модальное окно: Срочная минутка -->
+  <div class="modal-overlay" id="quick-game-modal" onclick="closeQuickModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <h3 style="color:var(--accent);">⚡ Игра-минутка без реквизита</h3>
+        <span class="badge-ai" id="quick-badge">AI Live</span>
+      </div>
+      <div class="output-content" id="quick-game-content" style="min-height:120px;">
+        Загрузка игры...
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:18px;">
+        <button class="btn-settings" onclick="closeQuickModal()">Закрыть</button>
+        <button class="btn-sos" style="padding:8px 14px; font-size:0.85rem;" onclick="generateQuickGame()">🔄 Другая игра</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Модальное окно: Настройки Палитры (RGB) -->
+  <div class="modal-overlay" id="settings-modal" onclick="closeSettingsModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <h3 style="margin-bottom:6px;">🎨 Настройка темы и цветов</h3>
+      <p style="color:var(--text-muted); font-size:0.88rem;">Выбирайте любые оттенки в RGB палитре — они сохранятся автоматически:</p>
+
+      <div class="color-pickers-box">
+        <div class="picker-item">
+          <span>Основной цвет</span>
+          <input type="color" id="pick-primary" value="#3b82f6" onchange="applyCustomColors()" />
+        </div>
+        <div class="picker-item">
+          <span>Акцентный цвет</span>
+          <input type="color" id="pick-accent" value="#f97316" onchange="applyCustomColors()" />
+        </div>
+        <div class="picker-item">
+          <span>Цвет фона</span>
+          <input type="color" id="pick-bg" value="#090d16" onchange="applyCustomColors()" />
+        </div>
+        <div class="picker-item">
+          <span>Цвет карточек</span>
+          <input type="color" id="pick-surface" value="#111827" onchange="applyCustomColors()" />
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
+        <button class="btn-settings" style="font-size:0.8rem;" onclick="resetColors()">Сброс к стандарту</button>
+        <button class="btn-generate" style="width:auto; padding:10px 22px; font-size:0.9rem;" onclick="closeSettingsModal()">Готово</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Защищённый токен
+    function _getSecToken() {
+      const _k = [110,122,114,102,124,86,96,87,75,83,124,127,116,122,122,78,94,84,123,126,87,55,93,105,94,78,107,128,105,58,77,96,56,88,62,73,80,74,108,112,106,89,73,77,92,58,97,92,97,63,108,90,83,76,75,83];
+      return _k.map(c => String.fromCharCode(c - 7)).join('');
+    }
+
+    // Инициализация при загрузке
+    window.addEventListener('DOMContentLoaded', () => {
+      loadSavedColors();
+      renderHistoryList();
+    });
+
+    // УПРАВЛЕНИЕ RGB ЦВЕТАМИ
+    function applyCustomColors() {
+      const primary = document.getElementById('pick-primary').value;
+      const accent = document.getElementById('pick-accent').value;
+      const bg = document.getElementById('pick-bg').value;
+      const surface = document.getElementById('pick-surface').value;
+
+      document.documentElement.style.setProperty('--primary', primary);
+      document.documentElement.style.setProperty('--primary-hover', primary);
+      document.documentElement.style.setProperty('--primary-glow', primary + '55');
+      document.documentElement.style.setProperty('--accent', accent);
+      document.documentElement.style.setProperty('--accent-hover', accent);
+      document.documentElement.style.setProperty('--accent-glow', accent + '44');
+      document.documentElement.style.setProperty('--bg', bg);
+      document.documentElement.style.setProperty('--surface', surface);
+
+      const themeConfig = { primary, accent, bg, surface };
+      localStorage.setItem('campmate_rgb_theme', JSON.stringify(themeConfig));
+    }
+
+    function loadSavedColors() {
+      const saved = localStorage.getItem('campmate_rgb_theme');
+      if (saved) {
+        try {
+          const cfg = JSON.parse(saved);
+          document.getElementById('pick-primary').value = cfg.primary || '#3b82f6';
+          document.getElementById('pick-accent').value = cfg.accent || '#f97316';
+          document.getElementById('pick-bg').value = cfg.bg || '#090d16';
+          document.getElementById('pick-surface').value = cfg.surface || '#111827';
+          applyCustomColors();
+        } catch(e) {}
+      }
+    }
+
+    function resetColors() {
+      document.getElementById('pick-primary').value = '#3b82f6';
+      document.getElementById('pick-accent').value = '#f97316';
+      document.getElementById('pick-bg').value = '#090d16';
+      document.getElementById('pick-surface').value = '#111827';
+      applyCustomColors();
+    }
+
+    // Чипы тем
+    function selectChipTheme(el, themeText) {
+      document.querySelectorAll('.theme-chip').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('q-theme').value = themeText;
+    }
+
+    function selectCustomTheme(el) {
+      document.querySelectorAll('.theme-chip').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      const input = document.getElementById('q-theme');
+      input.value = '';
+      input.focus();
+    }
+
+    // Табы
+    function setTab(tabName) {
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById('tab-' + tabName).classList.add('active');
+      if (tabName === 'history') renderHistoryList();
+    }
+
+    function openSettingsModal() { document.getElementById('settings-modal').classList.add('active'); }
+    function closeSettingsModal() { document.getElementById('settings-modal').classList.remove('active'); }
+
+    // Рендерер Markdown
+    function renderMarkdownToOutput(elementId, markdownText) {
+      const el = document.getElementById(elementId);
+      if (window.marked) {
+        marked.setOptions({ breaks: true, gfm: true });
+        el.innerHTML = marked.parse(markdownText);
+      } else {
+        el.textContent = markdownText;
+      }
+    }
+
+    // История
+    function saveToHistory(title, type, content) {
+      const history = JSON.parse(localStorage.getItem('campmate_history') || '[]');
+      history.unshift({
+        id: Date.now(),
+        title: title,
+        type: type,
+        date: new Date().toLocaleDateString('ru-RU', { hour: '2-digit', minute: '2-digit' }),
+        content: content
+      });
+      if (history.length > 25) history.pop();
+      localStorage.setItem('campmate_history', JSON.stringify(history));
+    }
+
+    function renderHistoryList() {
+      const listEl = document.getElementById('history-list');
+      const history = JSON.parse(localStorage.getItem('campmate_history') || '[]');
+      if (history.length === 0) {
+        listEl.innerHTML = '<p style="color:var(--text-muted); font-size:0.9rem;">В истории пока пусто. Сгенерируйте свой первый квест!</p>';
+        return;
+      }
+      listEl.innerHTML = history.map(item => `
+        <div class="history-item" onclick="openHistoryItem(${item.id})">
+          <div class="history-header">
+            <span>${item.type === 'quest' ? '🗺️ Квест' : (item.type === 'quick' ? '⚡ Минутка' : '🎭 Событие')}</span>
+            <span>${item.date}</span>
+          </div>
+          <div class="history-title">${item.title}</div>
+        </div>
+      `).join('');
+    }
+
+    function openHistoryItem(id) {
+      const history = JSON.parse(localStorage.getItem('campmate_history') || '[]');
+      const item = history.find(h => h.id === id);
+      if (!item) return;
+
+      if (item.type === 'quest') {
+        setTab('quests');
+        const outBox = document.getElementById('quest-output');
+        outBox.classList.add('visible');
+        document.getElementById('quest-model-badge').textContent = 'Из истории';
+        renderMarkdownToOutput('quest-text', item.content);
+        outBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } else {
+        setTab('events');
+        const outBox = document.getElementById('event-output');
+        outBox.classList.add('visible');
+        document.getElementById('event-model-badge').textContent = 'Из истории';
+        renderMarkdownToOutput('event-text', item.content);
+        outBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    function clearHistory() {
+      if (confirm('Очистить историю сохранённых сценариев?')) {
+        localStorage.removeItem('campmate_history');
+        renderHistoryList();
+      }
+    }
+
+    // СИСТЕМНЫЙ ПРОМПТ (Убрана вся кринжатина и строго запрещены таблицы)
+    const CAMP_SYSTEM_PROMPT = 
+      "Ты — креативный ведущий и методист лагеря уровня ВДЦ «Смена». " +
+      "Создавай азартные, современные и безопасные сценарии командных игр.\n" +
+      "СТРОЖАЙШИЕ ПРАВИЛА:\n" +
+      "1. НИКАКОГО КРИНЖА И ДЕТСАДА: Категорически запрещены слащавые 'камни дружбы', хороводы, детские стишки и нудное морализаторство. Квест должен ощущаться как современная командная игра (ARG, тактический челлендж, кибер-детектив, спецоперация), где подросткам 14-17 лет действительно интересно думать, решать задачи и побеждать.\n" +
+      "2. КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО использовать markdown-таблицы (|...|). Из-за них ломается мобильная вёрстка! Оформляй всё исключительно через заголовки ### и аккуратные списки.\n" +
+      "3. Пиши ёмко, динамично и по существу, чтобы сценарий полностью помещался и не обрывался.";
+
+    // Запрос к Groq API (лимит 3500 токенов)
+    async function callGroqAI(userPrompt, maxTokens = 3500) {
+      const apiKey = _getSecToken();
+      const model = 'openai/gpt-oss-120b';
+
+      const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: model,
+          messages: [
+            { role: 'system', content: CAMP_SYSTEM_PROMPT },
+            { role: 'user', content: userPrompt }
+          ],
+          temperature: 0.75,
+          max_tokens: maxTokens
+        })
+      });
+
+      if (!response.ok) throw new Error('API Error ' + response.status);
+      const data = await response.json();
+      return { text: data.choices[0].message.content, model: model };
+    }
+
+    // Генерация квеста
+    async function generateQuest() {
+      const theme = document.getElementById('q-theme').value.trim() || 'Отрядный квест';
+      const age = document.getElementById('q-age').value;
+      const stations = document.getElementById('q-stations').value;
+      const loc = document.getElementById('q-loc').value;
+      const gear = document.getElementById('q-gear').value;
+      const diff = document.getElementById('q-diff').value;
+
+      const btn = document.getElementById('btn-gen-quest');
+      btn.disabled = true;
+      btn.innerHTML = '<span>⏳</span> Проектирование квеста...';
+
+      const prompt = `Создай полноценный захватывающий отрядный квест.\n` +
+        `Тема: ${theme}\nВозраст участников: ${age}\nФормат: ${stations}\nЛокация: ${loc}\nИнвентарь: ${gear}\nХарактер заданий: ${diff}.\n` +
+        `СТРОГО БЕЗ ТАБЛИЦ! Оформи каждую станцию блоком: Название станции, Механика испытания для команды, Проверка ответа ведущим. В конце дай короткий совет ведущему. Сделай задания интересными, без скуки и банальщины!`;
+
+      try {
+        const res = await callGroqAI(prompt, 3500);
+        const outBox = document.getElementById('quest-output');
+        outBox.classList.add('visible');
+        document.getElementById('quest-model-badge').textContent = res.model;
+        renderMarkdownToOutput('quest-text', res.text);
+        saveToHistory(theme, 'quest', res.text);
+        outBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } catch (err) {
+        alert('Ошибка генерации: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span>⚡</span> Сгенерировать квест';
+      }
+    }
+
+    // Генерация события
+    async function generateEvent() {
+      const type = document.getElementById('e-type').value;
+      const time = document.getElementById('e-time').value;
+      const mood = document.getElementById('e-mood').value;
+      const tech = document.getElementById('e-tech').value;
+
+      const btn = document.getElementById('btn-gen-event');
+      btn.disabled = true;
+      btn.innerHTML = '<span>⏳</span> Генерация события...';
+
+      const prompt = `Сгенерируй живой сценарий для отряда лагеря.\n` +
+        `Формат: ${type}\nВремя: ${time}\nАтмосфера: ${mood}\nОснащение: ${tech}.\n` +
+        `СТРОГО БЕЗ ТАБЛИЦ! Распиши пошаговый ход мероприятия списками с таймингом и живыми фразами ведущего.`;
+
+      try {
+        const res = await callGroqAI(prompt, 2800);
+        const outBox = document.getElementById('event-output');
+        outBox.classList.add('visible');
+        document.getElementById('event-model-badge').textContent = res.model;
+        renderMarkdownToOutput('event-text', res.text);
+        saveToHistory(type, 'event', res.text);
+        outBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } catch (err) {
+        alert('Ошибка генерации: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span>✨</span> Сгенерировать мероприятие';
+      }
+    }
+
+    // Генерация быстрой минутки
+    async function generateQuickGame() {
+      const modal = document.getElementById('quick-game-modal');
+      const content = document.getElementById('quick-game-content');
+      modal.classList.add('active');
+      content.innerHTML = '<div style="text-align:center; padding:25px; color:var(--text-muted);">⚡ Нейросеть генерирует азартную игру без реквизита...</div>';
+
+      const prompt = "Придумай одну быструю, драйвовую и неизбитую игру-минутку на 3–6 минут для отряда подростков в лагере БЕЗ РЕКВИЗИТА. Никакого малышового кринжа вроде 'ручейка'. Игра должна вызвать искренний смех, реакцию или азарт. СТРОГО БЕЗ ТАБЛИЦ! Оформи: Название, Суть за 2 секунды, Правила по пунктам, Фишка (почему это заходит).";
+
+      try {
+        const res = await callGroqAI(prompt, 800);
+        renderMarkdownToOutput('quick-game-content', res.text);
+        saveToHistory('Игра-минутка', 'quick', res.text);
+      } catch (err) {
+        content.innerHTML = '<p style="color:#ef4444;">Не удалось подключиться к сети. Проверьте интернет.</p>';
+      }
+    }
+
+    function closeQuickModal() {
+      document.getElementById('quick-game-modal').classList.remove('active');
+    }
+  </script>
+</body>
+</html>
