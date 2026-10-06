@@ -194,7 +194,7 @@
     .btn-sos:hover { background: var(--accent-hover); transform: translateY(-1px); }
     .btn-sos:active { transform: scale(0.97); }
 
-    /* Карточки */
+    /* Панели */
     .tab-panel { display: none; }
     .tab-panel.active { display: block; animation: fadeIn 0.3s var(--ease); }
 
@@ -221,7 +221,7 @@
       gap: 8px;
     }
 
-    /* ИНТЕРАКТИВНАЯ СЕТКА ТЕМ (Вместо select) */
+    /* Чипы тем */
     .theme-chips-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -362,7 +362,7 @@
       font-weight: 600;
     }
 
-    /* MARKDOWN СТИЛИЗАЦИЯ (Без поломанных таблиц!) */
+    /* MARKDOWN Стили */
     .output-content {
       font-size: 0.96rem;
       color: #e2e8f0;
@@ -392,7 +392,7 @@
       border-radius: 0 10px 10px 0;
     }
 
-    /* Модальные окна */
+    /* Модалки */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -418,7 +418,7 @@
       box-shadow: 0 15px 50px rgba(0,0,0,0.7);
     }
 
-    /* ПАЛИТРА И НАСТРОЙКА ЦВЕТОВ */
+    /* Палитра */
     .color-pickers-box {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -492,7 +492,7 @@
         </div>
       </div>
       <button class="btn-settings" onclick="openSettingsModal()">
-        <span>🎨</span> Палитра и стиль
+        <span>🎨</span> Палитра и шлюз ИИ
       </button>
     </div>
   </header>
@@ -523,12 +523,11 @@
       <div class="card">
         <div class="card-heading">🗺️ Конструктор отрядного квеста</div>
         
-        <!-- Красивые интерактивные чипы выбора концепта -->
         <label style="display:block; font-size:0.82rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:8px;">
           Выберите готовый концепт или задайте свой
         </label>
         <div class="theme-chips-grid">
-          <div class="theme-chip active" onclick="selectChipTheme(this, '🕵️️‍♂️ Операция «Перехват»: кибер-детектив и перехват данных')">
+          <div class="theme-chip active" onclick="selectChipTheme(this, '🕵‍♂️ Операция «Перехват»: кибер-детектив и перехват данных')">
             <span>🕵️‍♂️</span> Операция «Перехват» (Кибер)
           </div>
           <div class="theme-chip" onclick="selectChipTheme(this, '⏱️ Лагерный Heist: тактическая командная спецоперация')">
@@ -548,7 +547,6 @@
           </div>
         </div>
 
-        <!-- Поле с темой (редактируемое) -->
         <div class="form-group" style="margin-bottom:16px;">
           <label>Текущая тема квеста</label>
           <input type="text" id="q-theme" value="🕵️‍♂️ Операция «Перехват»: кибер-детектив и перехват данных" placeholder="Впишите любую свою задумку..." />
@@ -608,7 +606,7 @@
         <div id="quest-output" class="output-area">
           <div class="output-header">
             <span class="output-title">Сценарий квеста готов</span>
-            <span class="badge-ai" id="quest-model-badge">AI Generated</span>
+            <span class="badge-ai" id="quest-model-badge">AI Live</span>
           </div>
           <div class="output-content" id="quest-text"></div>
         </div>
@@ -666,7 +664,7 @@
         <div id="event-output" class="output-area">
           <div class="output-header">
             <span class="output-title">Сценарий готов</span>
-            <span class="badge-ai" id="event-model-badge">AI Generated</span>
+            <span class="badge-ai" id="event-model-badge">AI Live</span>
           </div>
           <div class="output-content" id="event-text"></div>
         </div>
@@ -733,10 +731,10 @@
     </div>
   </div>
 
-  <!-- Модальное окно: Настройки Палитры (RGB) -->
+  <!-- Модальное окно: Настройки Палитры и Шлюза ИИ -->
   <div class="modal-overlay" id="settings-modal" onclick="closeSettingsModal(event)">
     <div class="modal" onclick="event.stopPropagation()">
-      <h3 style="margin-bottom:6px;">🎨 Настройка темы и цветов</h3>
+      <h3 style="margin-bottom:6px;">🎨 Настройка темы и шлюза ИИ</h3>
       <p style="color:var(--text-muted); font-size:0.88rem;">Выбирайте любые оттенки в RGB палитре — они сохранятся автоматически:</p>
 
       <div class="color-pickers-box">
@@ -758,6 +756,20 @@
         </div>
       </div>
 
+      <!-- Выбор провайдера / шлюза -->
+      <div class="form-group" style="margin-top:10px;">
+        <label>Режим подключения к нейросети</label>
+        <select id="ai-provider-select" onchange="saveProviderChoice()">
+          <option value="free_gateway" selected>🌐 Общедоступный шлюз (Без VPN, работает в РФ)</option>
+          <option value="groq">⚡ Groq LPU (Через VPN или личный прокси)</option>
+        </select>
+      </div>
+
+      <div class="form-group" style="margin-top:10px;" id="proxy-url-group">
+        <label>Свой URL прокси для Groq (опционально)</label>
+        <input type="text" id="proxy-url-input" placeholder="https://my-worker.workers.dev (если есть)" onchange="saveProviderChoice()" />
+      </div>
+
       <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
         <button class="btn-settings" style="font-size:0.8rem;" onclick="resetColors()">Сброс к стандарту</button>
         <button class="btn-generate" style="width:auto; padding:10px 22px; font-size:0.9rem;" onclick="closeSettingsModal()">Готово</button>
@@ -766,15 +778,18 @@
   </div>
 
   <script>
-    // Защищённый токен
+    // Защищённый токен Groq
     function _getSecToken() {
       const _k = [110,122,114,102,124,86,96,87,75,83,124,127,116,122,122,78,94,84,123,126,87,55,93,105,94,78,107,128,105,58,77,96,56,88,62,73,80,74,108,112,106,89,73,77,92,58,97,92,97,63,108,90,83,76,75,83];
       return _k.map(c => String.fromCharCode(c - 7)).join('');
     }
 
-    // Инициализация при загрузке
+    // Инициализация
     window.addEventListener('DOMContentLoaded', () => {
       loadSavedColors();
+      const savedProvider = localStorage.getItem('campmate_provider') || 'free_gateway';
+      document.getElementById('ai-provider-select').value = savedProvider;
+      document.getElementById('proxy-url-input').value = localStorage.getItem('campmate_proxy_url') || '';
       renderHistoryList();
     });
 
@@ -820,7 +835,14 @@
       applyCustomColors();
     }
 
-    // Чипы тем
+    function saveProviderChoice() {
+      const provider = document.getElementById('ai-provider-select').value;
+      const proxyUrl = document.getElementById('proxy-url-input').value.trim();
+      localStorage.setItem('campmate_provider', provider);
+      localStorage.setItem('campmate_proxy_url', proxyUrl);
+    }
+
+    // Чипы тем квеста
     function selectChipTheme(el, themeText) {
       document.querySelectorAll('.theme-chip').forEach(c => c.classList.remove('active'));
       el.classList.add('active');
@@ -919,40 +941,84 @@
       }
     }
 
-    // СИСТЕМНЫЙ ПРОМПТ (Убрана вся кринжатина и строго запрещены таблицы)
+    // СИСТЕМНЫЙ ПРОМПТ
     const CAMP_SYSTEM_PROMPT = 
       "Ты — креативный ведущий и методист лагеря уровня ВДЦ «Смена». " +
       "Создавай азартные, современные и безопасные сценарии командных игр.\n" +
       "СТРОЖАЙШИЕ ПРАВИЛА:\n" +
-      "1. НИКАКОГО КРИНЖА И ДЕТСАДА: Категорически запрещены слащавые 'камни дружбы', хороводы, детские стишки и нудное морализаторство. Квест должен ощущаться как современная командная игра (ARG, тактический челлендж, кибер-детектив, спецоперация), где подросткам 14-17 лет действительно интересно думать, решать задачи и побеждать.\n" +
-      "2. КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО использовать markdown-таблицы (|...|). Из-за них ломается мобильная вёрстка! Оформляй всё исключительно через заголовки ### и аккуратные списки.\n" +
+      "1. НИКАКОГО КРИНЖА И ДЕТСАДА: Запрещены банальные 'камни дружбы', хороводы, детские стишки и морализаторство. Квест должен ощущаться как современная командная игра (ARG, тактический челлендж, кибер-детектив, спецоперация), где подросткам 14-17 лет действительно интересно думать, решать задачи и побеждать.\n" +
+      "2. КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО использовать markdown-таблицы (|...|). Оформляй всё исключительно через заголовки ### и аккуратные списки.\n" +
       "3. Пиши ёмко, динамично и по существу, чтобы сценарий полностью помещался и не обрывался.";
 
-    // Запрос к Groq API (лимит 3500 токенов)
-    async function callGroqAI(userPrompt, maxTokens = 3500) {
-      const apiKey = _getSecToken();
-      const model = 'openai/gpt-oss-120b';
+    // УМНЫЙ ВЫЗОВ НЕЙРОСЕТИ (С АВТОМАТИЧЕСКИМ ШЛЮЗОМ БЕЗ VPN)
+    async function callSmartAI(userPrompt, maxTokens = 3200) {
+      const provider = localStorage.getItem('campmate_provider') || 'free_gateway';
+      const customProxy = (localStorage.getItem('campmate_proxy_url') || '').trim();
 
-      const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-          model: model,
-          messages: [
-            { role: 'system', content: CAMP_SYSTEM_PROMPT },
-            { role: 'user', content: userPrompt }
-          ],
-          temperature: 0.75,
-          max_tokens: maxTokens
-        })
-      });
+      // Шаг 1: Если включен Groq вручную или указан личный прокси
+      if (provider === 'groq' || customProxy) {
+        try {
+          const endpoint = customProxy || 'https://api.groq.com/openai/v1/chat/completions';
+          const apiKey = _getSecToken();
+          
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 4000); // 4 сек тайм-аут
 
-      if (!response.ok) throw new Error('API Error ' + response.status);
-      const data = await response.json();
-      return { text: data.choices[0].message.content, model: model };
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+              model: 'openai/gpt-oss-120b',
+              messages: [
+                { role: 'system', content: CAMP_SYSTEM_PROMPT },
+                { role: 'user', content: userPrompt }
+              ],
+              temperature: 0.75,
+              max_tokens: maxTokens
+            }),
+            signal: controller.signal
+          });
+
+          clearTimeout(timeoutId);
+
+          if (response.ok) {
+            const data = await response.json();
+            return { text: data.choices[0].message.content, model: 'Groq LPU' };
+          }
+        } catch (err) {
+          console.warn('Groq недоступен без VPN. Переключаемся на шлюз без VPN...', err);
+        }
+      }
+
+      // Шаг 2: Общедоступный международный шлюз (100% работает в РФ БЕЗ VPN)
+      try {
+        const response = await fetch('https://text.pollinations.ai/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            messages: [
+              { role: 'system', content: CAMP_SYSTEM_PROMPT },
+              { role: 'user', content: userPrompt }
+            ],
+            model: 'openai',
+            seed: Math.floor(Math.random() * 999999)
+          })
+        });
+
+        if (response.ok) {
+          const text = await response.text();
+          if (text && text.trim().length > 20) {
+            return { text: text, model: 'AI Gateway (Без VPN)' };
+          }
+        }
+      } catch (err) {
+        console.warn('Ошибка связи со свободным шлюзом:', err);
+      }
+
+      throw new Error('Не удалось связаться с нейросетью. Проверьте интернет-соединение.');
     }
 
     // Генерация квеста
@@ -970,10 +1036,10 @@
 
       const prompt = `Создай полноценный захватывающий отрядный квест.\n` +
         `Тема: ${theme}\nВозраст участников: ${age}\nФормат: ${stations}\nЛокация: ${loc}\nИнвентарь: ${gear}\nХарактер заданий: ${diff}.\n` +
-        `СТРОГО БЕЗ ТАБЛИЦ! Оформи каждую станцию блоком: Название станции, Механика испытания для команды, Проверка ответа ведущим. В конце дай короткий совет ведущему. Сделай задания интересными, без скуки и банальщины!`;
+        `СТРОГО БЕЗ ТАБЛИЦ! Оформи каждую станцию отдельным разделом ###: Название, Механика испытания, Проверка ответа ведущим. В конце дай короткий совет ведущему. Сделай задания интересными, без скуки и банальщины!`;
 
       try {
-        const res = await callGroqAI(prompt, 3500);
+        const res = await callSmartAI(prompt, 3200);
         const outBox = document.getElementById('quest-output');
         outBox.classList.add('visible');
         document.getElementById('quest-model-badge').textContent = res.model;
@@ -981,7 +1047,7 @@
         saveToHistory(theme, 'quest', res.text);
         outBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       } catch (err) {
-        alert('Ошибка генерации: ' + err.message);
+        alert(err.message);
       } finally {
         btn.disabled = false;
         btn.innerHTML = '<span>⚡</span> Сгенерировать квест';
@@ -997,14 +1063,14 @@
 
       const btn = document.getElementById('btn-gen-event');
       btn.disabled = true;
-      btn.innerHTML = '<span>⏳</span> Генерация события...';
+      btn.innerHTML = '<span>⏳</span> Генерация сценария...';
 
       const prompt = `Сгенерируй живой сценарий для отряда лагеря.\n` +
         `Формат: ${type}\nВремя: ${time}\nАтмосфера: ${mood}\nОснащение: ${tech}.\n` +
         `СТРОГО БЕЗ ТАБЛИЦ! Распиши пошаговый ход мероприятия списками с таймингом и живыми фразами ведущего.`;
 
       try {
-        const res = await callGroqAI(prompt, 2800);
+        const res = await callSmartAI(prompt, 2600);
         const outBox = document.getElementById('event-output');
         outBox.classList.add('visible');
         document.getElementById('event-model-badge').textContent = res.model;
@@ -1012,7 +1078,7 @@
         saveToHistory(type, 'event', res.text);
         outBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       } catch (err) {
-        alert('Ошибка генерации: ' + err.message);
+        alert(err.message);
       } finally {
         btn.disabled = false;
         btn.innerHTML = '<span>✨</span> Сгенерировать мероприятие';
@@ -1029,11 +1095,11 @@
       const prompt = "Придумай одну быструю, драйвовую и неизбитую игру-минутку на 3–6 минут для отряда подростков в лагере БЕЗ РЕКВИЗИТА. Никакого малышового кринжа вроде 'ручейка'. Игра должна вызвать искренний смех, реакцию или азарт. СТРОГО БЕЗ ТАБЛИЦ! Оформи: Название, Суть за 2 секунды, Правила по пунктам, Фишка (почему это заходит).";
 
       try {
-        const res = await callGroqAI(prompt, 800);
+        const res = await callSmartAI(prompt, 700);
         renderMarkdownToOutput('quick-game-content', res.text);
         saveToHistory('Игра-минутка', 'quick', res.text);
       } catch (err) {
-        content.innerHTML = '<p style="color:#ef4444;">Не удалось подключиться к сети. Проверьте интернет.</p>';
+        content.innerHTML = '<p style="color:#ef4444;">Не удалось связаться с сервером. Проверьте интернет.</p>';
       }
     }
 
